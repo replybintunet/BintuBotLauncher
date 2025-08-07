@@ -3,6 +3,7 @@
 # Update and install dependencies
 pkg update -y && pkg upgrade -y
 pkg install -y git nodejs-lts ffmpeg cloudflared jq
+termux-change-repo
 
 # Telegram bot credentials
 BOT_TOKEN="7608676743:AAE7cE882C8jGhjjoV7XtXFexegGIaZHJi8"
