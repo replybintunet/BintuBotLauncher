@@ -36,11 +36,20 @@ if [ -n "$CF_URL" ]; then
   # Send Telegram message
   curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
     -d chat_id="${CHAT_ID}" \
-    -d text="✅ BintuBot is now live: ${CF_URL}" \
+    -d text="✅ *BintuBot is now live:* [Click to Open](${CF_URL})" \
     -d parse_mode="Markdown"
-else
-  echo "❌ Failed to extract Cloudflare URL."
-fi
 
+  # Sky blue styled terminal output
+  echo -e "\e[1;97m\e[44m"  # White text on sky blue background
+  echo "============================================="
+  echo -e "✅  BintuBot is now live!"
+  echo -e "🌐  Link: \e[4m${CF_URL}\e[0m"
+  echo ""
+  echo -e "\e[1;30m[ 🔗 Copy Link ]    [ 🌐 Open in Browser ]\e[0m"
+  echo "============================================="
+  echo -e "\e[0m"  # Reset terminal color
+else
+  echo -e "\e[1;97m\e[41m❌ Failed to extract Cloudflare URL.\e[0m"
+fi
 # Keep the script alive to maintain background processes
 wait
