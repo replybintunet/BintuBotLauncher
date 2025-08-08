@@ -31,35 +31,15 @@ sleep 10
 # Extract Cloudflare URL from the specific log line
 CF_URL=$(grep -oP 'https://[a-z0-9\-]+\.trycloudflare\.com' cf.log | tail -n1)
 
-# Colors
-RESET="\e[0m"
-WHITE_ON_BLUE="\e[1;97m\e[48;5;39m"  # Sky blue background (color 39), white text
-
-# Simulate button (icon + label)
-function print_button() {
-  echo -e "${WHITE_ON_BLUE}  ≡  Open Link  ${RESET}"
-  echo -e "${WHITE_ON_BLUE}  📋  Copy Link  ${RESET}"
-}
-
-# Extracted Cloudflare URL
+# Check if URL was extracted
 if [ -n "$CF_URL" ]; then
-  # Send Telegram notification
+  # Send Telegram message
   curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
     -d chat_id="${CHAT_ID}" \
-    -d text="✅ *BintuBot is now live:* [Click to Open](${CF_URL})" \
+    -d text="✅ BintuBot is now live: ${CF_URL}" \
     -d parse_mode="Markdown"
-
-  # Display button-style output
-  echo -e "\n\e[1;97m\e[48;5;39m=========== BintuBot Online ===========${RESET}"
-  echo -e "${WHITE_ON_BLUE} ✅ Live at: $CF_URL ${RESET}"
-  print_button
-  echo -e "\e[1;97m\e[48;5;39m=======================================${RESET}\n"
-
-  # Optional: copy to clipboard and open link
-  echo "$CF_URL" | termux-clipboard-set
-  xdg-open "$CF_URL" >/dev/null 2>&1 &
 else
-  echo -e "\e[1;97m\e[41m❌ Failed to extract Cloudflare URL.\e[0m"
+  echo "❌ Failed to extract Cloudflare URL."
 fi
 
 # Keep the script alive to maintain background processes
