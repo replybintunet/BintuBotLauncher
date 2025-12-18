@@ -1,6 +1,7 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
 # Update and install dependencies
+termux-change-repo
 pkg update -y && pkg upgrade -y
 pkg install -y git nodejs-lts ffmpeg cloudflared jq
 
