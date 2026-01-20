@@ -31,17 +31,111 @@ HTML = """
 <meta charset="UTF-8">
 <title>Termux YouTube Stream</title>
 <style>
-body { font-family: Arial, sans-serif; background: #1c1c1c; color: #fff; text-align: center; }
-h1 { color: #ff0000; }
-input, button { padding: 10px; margin: 5px; border-radius: 5px; border: none; }
-button { background-color: #ff0000; color: #fff; cursor: pointer; }
-button:hover { background-color: #cc0000; }
-label { display: block; margin-top: 10px; }
-textarea { width: 80%; height: 150px; margin-top: 20px; background: #333; color: #0f0; padding: 10px; border-radius: 5px; border: none; font-family: monospace; }
+/* Reset & base */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Courier New', monospace; }
+body {
+    background: linear-gradient(135deg, #90e0ef, #00b4d8);
+    color: #03045e;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Header */
+h1 {
+    font-size: 2.5em;
+    color: #0077b6;
+    margin-bottom: 30px;
+    text-shadow: 1px 1px 2px #fff;
+}
+
+/* Form container */
+form {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    padding: 25px 35px;
+    max-width: 500px;
+    width: 100%;
+    animation: float 6s ease-in-out infinite;
+}
+
+/* Float animation */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Labels & inputs */
+label { display: block; margin: 15px 0 5px 0; font-weight: bold; }
+input[type="text"], input[type="file"] {
+    width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #0077b6;
+}
+input[type="checkbox"] { margin-right: 8px; }
+
+/* Buttons */
+button {
+    padding: 12px 25px;
+    margin: 10px 5px;
+    border: none; border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+button[type="submit"] { background-color: #0077b6; color: #fff; }
+button[type="submit"]:hover { background-color: #023e8a; }
+
+/* Log container */
+.log-computer {
+    position: relative;
+    width: 90%;
+    max-width: 800px;
+    height: 300px;
+    margin-top: 40px;
+    background: #03045e;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    overflow: hidden;
+    border: 4px solid #0077b6;
+    animation: drift 10s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+    0% { transform: rotate(-1deg); }
+    50% { transform: rotate(1deg); }
+    100% { transform: rotate(-1deg); }
+}
+
+.log-computer::before {
+    content: "";
+    position: absolute;
+    top: 10px; left: 20px;
+    width: 40px; height: 15px;
+    background: #00b4d8;
+    border-radius: 3px;
+}
+
+/* Log textarea */
+textarea {
+    width: 100%;
+    height: 100%;
+    background: black;
+    color: #00ff00;
+    padding: 15px;
+    border: none;
+    font-family: monospace;
+    font-size: 14px;
+    resize: none;
+    overflow-y: auto;
+}
 </style>
 </head>
 <body>
+
 <h1>Termux YouTube Stream</h1>
+
 <form method="POST" action="/start" enctype="multipart/form-data">
     <label>Upload Video:</label>
     <input type="file" name="video" accept="video/*" required>
@@ -52,19 +146,16 @@ textarea { width: 80%; height: 150px; margin-top: 20px; background: #333; color:
     <label>Cloudflare Video URL:</label>
     <input type="text" name="cf_url" placeholder="Optional Cloudflare URL">
 
-    <label>Mute Video:</label>
-    <input type="checkbox" name="mute">
+    <label><input type="checkbox" name="mute"> Mute Video</label>
+    <label><input type="checkbox" name="loop" checked> Loop Video</label>
 
-    <label>Loop Video:</label>
-    <input type="checkbox" name="loop" checked>
-
-    <br>
     <button type="submit">Start Stream</button>
     <button type="submit" formaction="/stop">Stop Stream</button>
 </form>
 
-<h2>Stream Log</h2>
-<textarea readonly id="log">{{ log }}</textarea>
+<div class="log-computer">
+    <textarea readonly id="log">{{ log }}</textarea>
+</div>
 
 <script>
 function updateLog(){
@@ -75,6 +166,7 @@ function updateLog(){
 }
 updateLog();
 </script>
+
 </body>
 </html>
 """
